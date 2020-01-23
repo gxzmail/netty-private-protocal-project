@@ -1,6 +1,7 @@
 package com.xzguo.netty.common;
 
 import java.util.List;
+import java.util.Map;
 
 import io.netty.buffer.*;
 import io.netty.channel.*;
@@ -25,7 +26,15 @@ public class NettyMessageEncode extends MessageToByteEncoder<Message> {
 			sendBuf.writeInt(0);
 		} else if (head.getAttachment().size() > 0) {
 			sendBuf.writeInt(head.getAttachment().size());
-			
+			String key = null;
+			byte[] keyArray = null;
+			byte[] value = null;
+			for (Map.Entry<String, Object> param : head.getAttachment().
+					entrySet()) {
+				keyArray = key.getBytes("UTF-8");
+				sendBuf.writeInt(keyArray.length);
+				
+			}
 		}
 		
 	

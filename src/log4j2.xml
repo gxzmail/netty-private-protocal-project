@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，
+     你会看到log4j2内部各种详细输出。可以设置成OFF(关闭) 或 Error(只输出错误信息)。
+     30s 刷新此配置-->
+<configuration status="off" monitorInterval="30"
+	shutdownHook="disable">
+	<properties>
+		<property name="INFO_HOME">log/info</property>
+		<property name="LOG_HOME">log/error</property>
+		<property name="MINUTE_HOME">log/minute</property>
+		<property name="RESOURCE_HOME">log/resource</property>
+		<property name="chatLog">log/chat</property>
+		<property name="callbackLog">log/callback</property>
+	</properties>
+
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			 <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss SSS} [-%l] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<!-- 普通日志 -->
+		<RollingFile name="info_appender" fileName="${INFO_HOME}/info.log"
+			filePattern="${INFO_HOME}/info-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss SSS} [%thread] %m%n" />
+			<SizeBasedTriggeringPolicy size="200 MB" />
+			<DefaultRolloverStrategy max="20" min="0" />
+			<Filters>
+				<ThresholdFilter level="error" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<ThresholdFilter level="info" onMatch="ACCEPT"
+					onMismatch="DENY" />
+			</Filters>
+		</RollingFile>
+
+		<!-- 错误日志 -->
+		<RollingFile name="error_appender" fileName="${LOG_HOME}/error.log"
+			filePattern="${LOG_HOME}/error-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss SSS} [%thread] %m%n" />
+			<SizeBasedTriggeringPolicy size="200 MB" />
+			<DefaultRolloverStrategy max="20" min="0" />
+			<ThresholdFilter level="error" onMatch="ACCEPT"
+				onMismatch="DENY" />
+		</RollingFile>
+
+
+	</appenders>
+
+	<loggers>
+		<AsyncLogger name="org.springframework" level="warn" />
+		<AsyncLogger name="org.apache.mina" level="warn" />
+		<AsyncLogger name="org.apache.http" level="warn" />
+		<AsyncLogger name="org.apache.commons" level="warn" />
+		<AsyncLogger name="com.mchange.v2" level="error" />
+		<AsyncLogger name="com.ibatis" level="warn" />
+		<AsyncLogger name="java.sql" level="info" />
+		<AsyncLogger name="org.quartz" level="warn" />
+		<AsyncLogger name="com.opensymphony" level="warn" />
+		<AsyncLogger name="com.sun.xml.internal.ws" level="warn" />
+
+		<AsyncLogger name="error_logger" level="error" additivity="true">
+			<AppenderRef ref="error_appender" />
+		</AsyncLogger>
+		<AsyncLogger name="info_logger" level="info" additivity="true">
+			<AppenderRef ref="info_appender" />
+		</AsyncLogger>
+		<root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="error_appender" />
+			<AppenderRef ref="info_appender" />
+		</root>
+		
+		<!-- 针对指定的框架日志信息不输出
+        <logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleInfoLog" />
+            <AppenderRef ref="ErrorRollingFileLog" />
+        </logger>
+        <logger name="net.sf" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleErrorLog" />
+            <AppenderRef ref="ErrorRollingFileLog" />
+        </logger-->
+
+	</loggers>
+
+</configuration>

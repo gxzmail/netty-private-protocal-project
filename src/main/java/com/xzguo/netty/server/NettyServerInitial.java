@@ -7,7 +7,8 @@ public class NettyServerInitial extends ChannelInitializer{
 	@Override
 	protected void initChannel(Channel ch) throws Exception {
 		// TODO Auto-generated method stub
-		ch.pipeline().addLast("encode", new NettyMessageEncode());                                                                                                                   
+		ch.pipeline().addLast("encode", new NettyMessageEncode());
+		ch.pipeline().addLast("decode", new NettyMessageDecode());
 		
 	}
 	
