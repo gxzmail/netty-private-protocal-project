@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /*
  * 下述为创建marshaller和unmarshaller的经典写法
+ * 返回的值都是类的实例。即接口中的方法都已经实现
  */
 public class MarshallingCodecFactory {
 	Logger logger = LoggerFactory.getLogger(MarshallingCodecFactory.class);
