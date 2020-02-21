@@ -70,7 +70,7 @@ public class NettyMessageEncode extends MessageToByteEncoder<Message> {
 			sendBuf.writeInt(0);
 		}
 		//将整个message的长度写入header的length字段中
-		sendBuf.setInt(4, sendBuf.readByte())
+		sendBuf.setInt(4, sendBuf.readByte());
 	}
 	
 
